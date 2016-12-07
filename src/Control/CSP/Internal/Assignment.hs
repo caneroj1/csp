@@ -4,6 +4,8 @@ module Control.CSP.Internal.Assignment
 , get
 , assign
 , unassign
+, isAssigned
+, isNull
 , assignCmp
 , Assignment
 )
@@ -32,6 +34,12 @@ reassign v d = Assignment . M.update (const (return d)) v . getAssign
 
 assignCmp :: (Monad m, Eq a, Eq (m a)) => (a, a) -> (m a, m a) -> Bool
 assignCmp f s = s == bimap return return f
+
+isAssigned :: (Ord v) => v -> Assignment v d -> Bool
+isAssigned v = isJust . fromJust . M.lookup v . getAssign
+
+isNull :: (Ord v) => Assignment v d -> Bool
+isNull = all isNothing . M.elems . getAssign
 
 newtype Assignment v d = Assignment {
   getAssign :: M.Map v (Maybe d)

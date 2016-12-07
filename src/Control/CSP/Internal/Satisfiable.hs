@@ -20,3 +20,6 @@ isSatisifiableWith :: (Ord v, Eq d)
                    -> Bool
 isSatisifiableWith bc@(BC (v1, v2, ds)) ds2 a =
   any (isSatisfied bc . flip (assign v2) a) ds2
+
+isComplete :: (Ord v, Eq d) => BinaryConstraintSet v d -> Assignment v d -> Bool
+isComplete d a = all (`isSatisfied` a) d

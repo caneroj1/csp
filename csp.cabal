@@ -16,6 +16,9 @@ cabal-version:       >=1.10
 library
   hs-source-dirs:      src
   exposed-modules:     Control.CSP.Algorithms.AC3
+                     , Control.CSP.Algorithms.NodeConsistency
+                     , Control.CSP.Heuristics.MinimumRemainingValues
+                     , Control.CSP.Search.Backtrack
                      , Control.CSP.Internal.Assignment
                      , Control.CSP.Internal.Satisfiable
                      , Control.CSP.Internal.Types

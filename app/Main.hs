@@ -30,14 +30,20 @@ bcs = [
   ]
 
 ucs :: UnaryConstraintSet Aus Color
-ucs = []
+ucs = [
+    mkUnary SA []
+  , mkUnary Q [G]
+  ]
 
 problem :: CSP Aus Color
 problem = CSP bcs ucs (makeDomains domains)
 
+handleFilter :: Maybe (CSP Aus Color) -> IO ()
+handleFilter Nothing                         = putStrLn "Got nothing"
+handleFilter (Just (CSP _ _ (VarDomains v))) = print v
+
 main :: IO ()
 main = do
   mapM_ print bcs
-  case runAC3 problem of
-    Nothing -> putStrLn "Got nothing!"
-    Just (CSP _ _ (VarDomains v))  -> print v
+  mapM_ print ucs
+  handleFilter (runNC problem >>= runAC3)
