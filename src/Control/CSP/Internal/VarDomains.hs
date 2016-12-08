@@ -4,6 +4,7 @@ module Control.CSP.Internal.VarDomains
 , domainOf
 , updateDomain
 , domainOfEachArc
+, use
 , VarDomains(..)
 )
 where
@@ -27,8 +28,12 @@ domainOf :: (Enum v) => VarDomains v d -> v -> [d]
 domainOf d v = fromJust . I.lookup (fromEnum v) $ getDomains d
 
 updateDomain :: (Enum v) => v -> [d] -> VarDomains v d -> VarDomains v d
-updateDomain v ds d = VarDomains $ I.update (Just . const ds) iv $ getDomains d
+updateDomain v ds = VarDomains . I.update (Just . const ds) iv . getDomains
   where iv = fromEnum v
+
+use :: (Enum v, Eq d) => v -> d -> VarDomains v d -> VarDomains v d
+use v d = VarDomains . I.update (Just . delete d) key . getDomains
+  where key = fromEnum v
 
 domainOfEachArc :: (Enum v)
                 => BinaryConstraint v d

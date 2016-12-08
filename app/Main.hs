@@ -1,6 +1,10 @@
 module Main where
 
 import Control.CSP.API
+import Control.CSP.CSP
+import Control.CSP.Internal.Assignment
+import Control.CSP.Heuristics.LeastConstraining
+import Control.CSP.Heuristics.Degree
 
 data Aus = WA | NT | Q | NSW | V | SA | T
   deriving (Ord, Eq, Show, Bounded, Enum)
@@ -9,8 +13,6 @@ data Color = R | G | B
   deriving (Eq, Show)
 
 domains :: Aus -> [Color]
--- domains SA = []
--- domains NT = [B]
 domains _ = [R, G, B]
 
 allDiff :: [(Color, Color)]
@@ -30,10 +32,7 @@ bcs = [
   ]
 
 ucs :: UnaryConstraintSet Aus Color
-ucs = [
-    mkUnary SA []
-  , mkUnary Q [G]
-  ]
+ucs = []
 
 problem :: CSP Aus Color
 problem = CSP bcs ucs (makeDomains domains)
@@ -42,8 +41,9 @@ handleFilter :: Maybe (CSP Aus Color) -> IO ()
 handleFilter Nothing                         = putStrLn "Got nothing"
 handleFilter (Just (CSP _ _ (VarDomains v))) = print v
 
+handleAssignment :: Maybe (Assignment Aus Color) -> IO ()
+handleAssignment Nothing               = putStrLn "Got nothing"
+handleAssignment (Just (Assignment m)) = print m
+
 main :: IO ()
-main = do
-  mapM_ print bcs
-  mapM_ print ucs
-  handleFilter (runNC problem >>= runAC3)
+main = handleAssignment $ solve problem

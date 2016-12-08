@@ -6,6 +6,8 @@ import Data.List
 
 class Satisfiable a where
   isSatisfied :: (Ord v, Eq d) => a v d -> Assignment v d -> Bool
+  notSatisfied :: (Ord v, Eq d) => a v d -> Assignment v d -> Bool
+  notSatisfied a = not . isSatisfied a
 
 instance Satisfiable BinaryConstraint where
   isSatisfied (BC (v1, v2, ds)) a = any (`assignCmp` (get v1 a, get v2 a)) ds

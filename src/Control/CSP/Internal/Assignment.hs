@@ -2,12 +2,13 @@ module Control.CSP.Internal.Assignment
 (
   initial
 , get
+, getAllUnassigned
 , assign
 , unassign
 , isAssigned
 , isNull
 , assignCmp
-, Assignment
+, Assignment(..)
 )
 where
 
@@ -40,6 +41,9 @@ isAssigned v = isJust . fromJust . M.lookup v . getAssign
 
 isNull :: (Ord v) => Assignment v d -> Bool
 isNull = all isNothing . M.elems . getAssign
+
+getAllUnassigned :: (Ord v, Bounded v, Enum v, Show v) => Assignment v d -> [v]
+getAllUnassigned a = filter (not . flip isAssigned a) allEnums
 
 newtype Assignment v d = Assignment {
   getAssign :: M.Map v (Maybe d)

@@ -16,3 +16,10 @@ adj bs = do
   return (v, filter (isNeighborOf v) bs)
   where
     isNeighborOf v (BC (_, v', _)) = v == v'
+
+binary :: Bool -> Int
+binary True = 1
+binary _    = 0
+
+mapKeep :: (a -> b) -> [a] -> [(a, b)]
+mapKeep f = map (\a -> (a, f a))

@@ -14,7 +14,20 @@ import Data.List
 import Data.Maybe
 import Data.Ord
 
-minimumRemainingValues :: (Ord v, Enum v, Eq d)
+-- the problem is in minimum remaining values:
+-- we can end up with the same VarDomain we started with
+-- if any assigned variables aren't present in the binary constraints,
+-- or if we have no binary constraints.
+-- maybe this should return a Maybe? or if the domains are equivalent,
+-- return the first unassigned variable?
+-- the problem is that with the australian map coloring, we choose T first
+-- with the degree heuristic. T isn't present in any binary constraints, and
+-- so we can't narrow down what to choose next. the domain remains the same,
+-- and due to the fact that we "used" a domain value in T, it is first in
+-- our sorted list, and we are just doing the same thing over and over.
+-- REWORK THIS!!
+
+minimumRemainingValues :: (Ord v, Enum v, Eq d, Bounded v)
                        => Assignment v d
                        -> VarDomains v d
                        -> BinaryConstraintSet v d

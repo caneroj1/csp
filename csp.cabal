@@ -17,6 +17,8 @@ library
   hs-source-dirs:      src
   exposed-modules:     Control.CSP.Algorithms.AC3
                      , Control.CSP.Algorithms.NodeConsistency
+                     , Control.CSP.Heuristics.Degree
+                     , Control.CSP.Heuristics.LeastConstraining
                      , Control.CSP.Heuristics.MinimumRemainingValues
                      , Control.CSP.Search.Backtrack
                      , Control.CSP.Internal.Assignment
@@ -25,6 +27,7 @@ library
                      , Control.CSP.Internal.Utils
                      , Control.CSP.Internal.VarDomains
                      , Control.CSP.API
+                     , Control.CSP.CSP
   build-depends:       base >= 4.7 && < 5
                      , containers
                      , lens
