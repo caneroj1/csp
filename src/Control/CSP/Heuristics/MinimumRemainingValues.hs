@@ -14,25 +14,12 @@ import Data.List
 import Data.Maybe
 import Data.Ord
 
--- the problem is in minimum remaining values:
--- we can end up with the same VarDomain we started with
--- if any assigned variables aren't present in the binary constraints,
--- or if we have no binary constraints.
--- maybe this should return a Maybe? or if the domains are equivalent,
--- return the first unassigned variable?
--- the problem is that with the australian map coloring, we choose T first
--- with the degree heuristic. T isn't present in any binary constraints, and
--- so we can't narrow down what to choose next. the domain remains the same,
--- and due to the fact that we "used" a domain value in T, it is first in
--- our sorted list, and we are just doing the same thing over and over.
--- REWORK THIS!!
-
 minimumRemainingValues :: (Ord v, Enum v, Eq d, Bounded v)
                        => Assignment v d
                        -> VarDomains v d
                        -> BinaryConstraintSet v d
-                       -> v
-minimumRemainingValues a d = chooseFrom . foldl' (constrain a) d
+                       -> (VarDomains v d, v)
+minimumRemainingValues a d = applyKeep (chooseFrom a) . foldl' (constrain a) d
 
 constrain :: (Ord v, Enum v, Eq d)
           => Assignment v d
@@ -54,10 +41,12 @@ constrain as d (BC (v1, v2, ds))
     domain' v vs = flip (updateDomain v) d $! vs `intersect` domainOf d v
     getFromBC f c = map c $ filter f ds
 
-chooseFrom :: (Enum v) => VarDomains v d -> v
-chooseFrom = toEnum                    .
-             fst                       .
-             minimumBy (comparing snd) .
-             map (bimap id length)     .
-             I.toList                  .
-             getDomains
+chooseFrom :: (Enum v, Ord v) => Assignment v d -> VarDomains v d -> v
+chooseFrom a = toEnum                      .
+               fst                         .
+               minimumBy (comparing snd)   .
+               map       (bimap id length) .
+               filter    (unassigned a)    .
+               I.toList                    .
+               getDomains
+ where unassigned a = isNotAssigned a . toEnum . fst

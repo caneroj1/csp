@@ -2,9 +2,7 @@ module Main where
 
 import Control.CSP.API
 import Control.CSP.CSP
-import Control.CSP.Internal.Assignment
-import Control.CSP.Heuristics.LeastConstraining
-import Control.CSP.Heuristics.Degree
+import qualified Data.Map.Strict as M
 
 data Aus = WA | NT | Q | NSW | V | SA | T
   deriving (Ord, Eq, Show, Bounded, Enum)
@@ -37,13 +35,9 @@ ucs = []
 problem :: CSP Aus Color
 problem = CSP bcs ucs (makeDomains domains)
 
-handleFilter :: Maybe (CSP Aus Color) -> IO ()
-handleFilter Nothing                         = putStrLn "Got nothing"
-handleFilter (Just (CSP _ _ (VarDomains v))) = print v
-
-handleAssignment :: Maybe (Assignment Aus Color) -> IO ()
-handleAssignment Nothing               = putStrLn "Got nothing"
-handleAssignment (Just (Assignment m)) = print m
-
 main :: IO ()
-main = handleAssignment $ solve problem
+main = mapM_ putStrLn .
+       maybe (return "No Solution!") (map disp) $
+       M.toList . getAssign <$> solve problem
+  where
+    disp (var, assn) = "Var " ++ show var ++ " assigned to " ++ show assn

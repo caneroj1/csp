@@ -4,15 +4,13 @@ module Control.CSP.API
 , mkBinary
 , mkUnary
 , solve
+, getAssign
 , BinaryConstraint
 , UnaryConstraint
 , BinaryConstraintSet
 , UnaryConstraintSet
-
-, runAC3
-, runNC
-, VarDomains(..)
-, Assignment(..)
+, VarDomains
+, Assignment
 ) where
 
 import Control.CSP.Internal.Assignment
@@ -29,7 +27,7 @@ runAC3 (CSP bc uc vd) = CSP bc uc <$> updateBinaryConstraints bc vd
 runNC :: (Bounded v, Enum v, Ord v, Eq v, Eq d) => CSP v d -> Maybe (CSP v d)
 runNC (CSP bc uc vd) = CSP bc uc <$> removeUnaryConstraints uc vd
 
-solve :: (Bounded v, Enum v, Ord v, Eq v, Eq d, Show v, Show d)
+solve :: (Bounded v, Enum v, Ord v, Eq v, Eq d)
       => CSP v d
       -> Maybe (Assignment v d)
 solve csp = runNC csp >>= runAC3 >>= (\(CSP bc _ d) -> backtrack bc d)

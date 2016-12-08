@@ -11,9 +11,7 @@ import Control.CSP.Internal.VarDomains
 import Data.Foldable
 import Data.Ord
 
-import Debug.Trace
-
-degree :: (Ord v, Enum v, Eq d, Bounded v, Show v)
+degree :: (Ord v, Enum v, Eq d, Bounded v)
         => Assignment v d
         -> VarDomains v d
         -> BinaryConstraintSet v d

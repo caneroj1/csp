@@ -12,9 +12,8 @@ import Control.CSP.Internal.Satisfiable
 import Control.CSP.Internal.Types
 import Control.CSP.Internal.VarDomains
 import Control.Monad
-import Debug.Trace
 
-backtrack :: (Bounded v, Enum v, Ord v, Eq d, Show v, Show d)
+backtrack :: (Bounded v, Enum v, Ord v, Eq d)
           => BinaryConstraintSet v d
           -> VarDomains v d
           -> Maybe (Assignment v d)
@@ -24,17 +23,17 @@ backtrack = doBacktrack initial
       | isComplete bcs assn = return assn
       | otherwise           =
         msum (mzero : do
-          let v = getNextChoice bcs domain assn
+          let (domain', v) = getNextChoice bcs domain assn
           d <- leastConstraining v domain assn bcs
-          let assn'   = assign v d assn
-              domain' = use v d domain
-          return $ doBacktrack assn' bcs domain')
+          let assn'    = assign v d assn
+              domain'' = use v d domain'
+          return $ doBacktrack assn' bcs domain'')
 
-getNextChoice :: (Bounded v, Enum v, Ord v, Eq d, Show v)
+getNextChoice :: (Bounded v, Enum v, Ord v, Eq d)
               => BinaryConstraintSet v d
               -> VarDomains v d
               -> Assignment v d
-              -> v
+              -> (VarDomains v d, v)
 getNextChoice bcs d a
-  | isNull a  = degree a d bcs
+  | isNull a  = (d, degree a d bcs)
   | otherwise = minimumRemainingValues a d bcs

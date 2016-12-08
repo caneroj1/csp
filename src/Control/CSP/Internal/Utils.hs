@@ -23,3 +23,6 @@ binary _    = 0
 
 mapKeep :: (a -> b) -> [a] -> [(a, b)]
 mapKeep f = map (\a -> (a, f a))
+
+applyKeep :: (a -> b) -> a -> (a, b)
+applyKeep f a = (a, f a)

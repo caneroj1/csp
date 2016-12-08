@@ -6,9 +6,11 @@ module Control.CSP.Internal.Assignment
 , assign
 , unassign
 , isAssigned
+, isNotAssigned
 , isNull
 , assignCmp
-, Assignment(..)
+, getAssign
+, Assignment
 )
 where
 
@@ -39,10 +41,13 @@ assignCmp f s = s == bimap return return f
 isAssigned :: (Ord v) => v -> Assignment v d -> Bool
 isAssigned v = isJust . fromJust . M.lookup v . getAssign
 
+isNotAssigned :: (Ord v) => Assignment v d -> v -> Bool
+isNotAssigned a = not . flip isAssigned a
+
 isNull :: (Ord v) => Assignment v d -> Bool
 isNull = all isNothing . M.elems . getAssign
 
-getAllUnassigned :: (Ord v, Bounded v, Enum v, Show v) => Assignment v d -> [v]
+getAllUnassigned :: (Ord v, Bounded v, Enum v) => Assignment v d -> [v]
 getAllUnassigned a = filter (not . flip isAssigned a) allEnums
 
 newtype Assignment v d = Assignment {

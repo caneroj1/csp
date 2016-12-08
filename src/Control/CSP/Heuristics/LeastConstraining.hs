@@ -13,22 +13,7 @@ import Data.Foldable
 import Data.List
 import Data.Ord
 
-import Debug.Trace
-
--- now that we have a variable, we need to choose
--- from its domain.
--- for each value in the domain, we need to check:
---  how many values it eliminates from the domains of
---  other unassigned variables
---    so given a variable and an element from its domain,
---    how do we check how many other elements it removes?
---      given a list of the other unassigned variables,
---      do the following for each:
---        get all of the elements in its domain, sum the
---        number of constraints that will be violated if
---        you choose that arrangement
-
-leastConstraining :: (Ord v, Enum v, Eq d, Bounded v, Show v)
+leastConstraining :: (Ord v, Enum v, Eq d, Bounded v)
                   => v
                   -> VarDomains v d
                   -> Assignment v d
