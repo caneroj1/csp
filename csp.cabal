@@ -1,6 +1,6 @@
 name:                csp
 version:             0.1.0.0
-synopsis:            Initial project template from stack
+synopsis:            Constraint satisfaction algorithms
 description:         Please see README.md
 homepage:            https://github.com/caneroj1/csp#readme
 license:             BSD3
@@ -8,7 +8,7 @@ license-file:        LICENSE
 author:              Joe Canero
 maintainer:          jmc41493@gmail.com
 copyright:           Copyright: (c) 2016 Joe Canero
-category:            Web
+category:            Control
 build-type:          Simple
 extra-source-files:  README.md
 cabal-version:       >=1.10
