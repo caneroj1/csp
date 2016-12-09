@@ -8,7 +8,6 @@ module Control.CSP.Internal.Assignment
 , isAssigned
 , isNotAssigned
 , isNull
-, assignCmp
 , getAssign
 , Assignment
 )
@@ -34,9 +33,6 @@ unassign v = reassign v Nothing
 
 reassign :: (Ord v) => v -> Maybe d -> Assignment v d -> Assignment v d
 reassign v d = Assignment . M.update (const (return d)) v . getAssign
-
-assignCmp :: (Monad m, Eq a, Eq (m a)) => (a, a) -> (m a, m a) -> Bool
-assignCmp f s = s == bimap return return f
 
 isAssigned :: (Ord v) => v -> Assignment v d -> Bool
 isAssigned v = isJust . fromJust . M.lookup v . getAssign

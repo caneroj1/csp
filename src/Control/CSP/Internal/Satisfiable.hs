@@ -2,6 +2,7 @@ module Control.CSP.Internal.Satisfiable where
 
 import Control.CSP.Internal.Assignment
 import Control.CSP.Internal.Types
+import Control.CSP.Internal.Utils
 import Data.List
 
 class Satisfiable a where
@@ -10,7 +11,7 @@ class Satisfiable a where
   notSatisfied a = not . isSatisfied a
 
 instance Satisfiable BinaryConstraint where
-  isSatisfied (BC (v1, v2, ds)) a = any (`assignCmp` (get v1 a, get v2 a)) ds
+  isSatisfied (BC (v1, v2, ds)) a = any (`mcmp` (get v1 a, get v2 a)) ds
 
 instance Satisfiable UnaryConstraint where
   isSatisfied (UC (v1, ds)) a = elem (get v1 a) $ map return ds

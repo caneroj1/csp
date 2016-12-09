@@ -11,8 +11,18 @@ import Control.CSP.Internal.Types
 import Control.CSP.Internal.Utils
 import Control.CSP.Internal.VarDomains
 import Control.Monad.State
+import Data.List
 
 import Control.Lens hiding (assign)
+
+type Adj v d = [(v, BinaryConstraintSet v d)]
+
+adj :: (Eq v, Enum v, Bounded v) => BinaryConstraintSet v d -> Adj v d
+adj bs = do
+  v <- allEnums
+  return (v, filter (isNeighborOf v) bs)
+  where
+    isNeighborOf v (BC (_, v', _)) = v == v'
 
 data AC3State v d = AC3 {
     _adjs :: Adj v d
@@ -45,5 +55,6 @@ updateBinaryConstraints bs d =
       if null d1'
         then return False
         else modify' (\s -> s & doms %~ updateDomain (fst arc) d1')
-             >> ac3 (newArcList bs (s ^. adjs) (fst arc))
-    newArcList bs as v = maybe bs (bs ++) $ lookup v as
+             >> ac3 (newArcList arc bs (s ^. adjs) (fst arc))
+    newArcList arc bs as v = maybe bs ((bs ++) . noDupArc arc) $ lookup v as
+    noDupArc arc = filter ((arc /=) . getArc)
