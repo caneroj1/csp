@@ -28,4 +28,4 @@ leastConstraining chosen d a bcs =
       minimum [numUnsatisfied d1 unassn d2 | d2 <- domainOf d unassn]
     numUnsatisfied d1 v2 d2 =
       let a' = assign v2 d2 $ assign chosen d1 a
-        in [sum $ map (binary . flip notSatisfied a') bcs]
+        in [sum $ map (fromEnum . flip notSatisfied a') bcs]

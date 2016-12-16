@@ -30,6 +30,6 @@ toConstraintIndex :: (Ord v, Enum v, Eq d)
 toConstraintIndex us bs v = sum $ map (isInConstraint v us) bs
   where
     isInConstraint v us (BC (v1, v2, _))
-      | v1 == v   = binary $ v2 `elem` us
-      | v2 == v   = binary $ v1 `elem` us
+      | v1 == v   = fromEnum $ v2 `elem` us
+      | v2 == v   = fromEnum $ v1 `elem` us
       | otherwise = 0

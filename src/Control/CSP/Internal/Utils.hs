@@ -9,10 +9,6 @@ allEnums = minBound `enumFromTo` maxBound
 getArc :: BinaryConstraint v d -> (v, v)
 getArc (BC (v1, v2, _)) = (v1, v2)
 
-binary :: Bool -> Int
-binary True = 1
-binary _    = 0
-
 mapKeep :: (a -> b) -> [a] -> [(a, b)]
 mapKeep f = map (\a -> (a, f a))
 
